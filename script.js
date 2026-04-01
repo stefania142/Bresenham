@@ -1,22 +1,17 @@
 //script.js
 //punto de partida del proyecto
-console.log("script.js");
 
 /**
  *Función principalque se ejecuta al hacer clic en "dibujar".
  *lee los valores de la tabla y los muestra en consola 
  */
 
- function dibujar (){
+ function dibujar(){
     //leer los valores y convertirlos a numero entero
     let x0= parseInt(document.getElementById("x0").value);
     let y0= parseInt(document.getElementById("y0").value);
     let x1= parseInt(document.getElementById("x1").value);
     let y1= parseInt(document.getElementById("y1").value);
-
-    //Verificación en consola 
-    console.log("x0:", x0, " y0:", y0);
-    console.log("x1:", x1, " y1:", y1);
 
     //obtener el canvas y su contexto de dibujo 2d
     let canvas=document.getElementById("miCanvas");
@@ -30,7 +25,6 @@ console.log("script.js");
         plot(ctx, x, y);
     });
 }
-
 /**
  * dibuja un pixel en el canvas en la posición (x, y)
  * @param {CanvasRenderingContext2D} ctx - contexto del canvas
@@ -43,7 +37,6 @@ function plot (ctx, x, y){
     //Cada pixel se va a dibujar como un cuadrado para que sea mas visible
     ctx.fillRect(x*4,y*4,4,4);
 }
-
 /**
  * implementaos el algoritmo de lineas de bresenham
  * @param {number} x0 - coordenadas x inicial
