@@ -1,11 +1,10 @@
 //script.js
 //punto de partida del proyecto
-
+let ESCALA =20;
 /**
  *Función principalque se ejecuta al hacer clic en "dibujar".
  *lee los valores de la tabla y los muestra en consola 
  */
-
  function dibujar(){
     //leer los valores y convertirlos a numero entero
     let x0= parseInt(document.getElementById("x0").value);
@@ -18,13 +17,13 @@
     let ctx = canvas.getContext("2d");
 
     //limpiar el canvas antes de dibujar
-    ctx.clearRect(0, 0, canvas.Width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     //dibujar las marcas de la escala
-    dibujarEscala(ctx, 4, canvas.Width, canvas.height);
+    dibujarEscala(ctx, canvas.width, canvas.height);
 
     //se llama al algoritmo, que pasa por la funcion plot
     bresenham(x0, y0, x1, y1, function(x,y) {
-        plot(ctx, x, y);
+        plot(ctx, x, y, canvas.height);
     });
 }
 /**
@@ -34,13 +33,41 @@
  * @param {number} y - Coordenadas Y del pixel
  */
  
-function plot (ctx, x, y){
+function plot (ctx, x, y, alto){
     ctx.fillStyle = "black";
     //Cada pixel se va a dibujar como un cuadrado para que sea mas visible
-    ctx.fillRect(x*4,y*4,4,4);
+    let px = x*ESCALA;
+    let py = (alto-20)-(y*ESCALA);
+    ctx.fillRect(px, py, 6, 6);
 }
+
 /**
- * implementaos el algoritmo de lineas de bresenham
+ * dibuja las marcasde escala numerica en los bordesdel canvas
+ * tambien se muestra el eje y el eje y
+ * @param {CanvasRenderingContext2D} ctx - contexto del canvas 
+ * @param {number} ancho - ancho total del canvas en px
+ * @param {number} alto - alto total del canvas en px
+*/
+
+function dibujarEscala(ctx, ancho, alto){
+    ctx.fillStyle="black";
+    ctx.font="10px Arial";
+
+    //aqui se calculan cuantas marcas entran en cada eje 
+    let marcasX = Math.floor(ancho/ESCALA);
+    let marcasY = Math.floor((alto-20)/ESCALA);
+
+    //se dibujan los numeros en el eje x
+    for (let i=0; i<=marcasX; i++){
+         ctx.fillText(i, i*ESCALA+2, alto-5);
+    }
+    //se dibujan los numeros en el eje y
+    for (let j=0; j<=marcasY; j++){
+        ctx.fillText(j,2, (alto-20)-(j*ESCALA)+10);
+    }
+}
+    /**
+ * implementación el algoritmo de lineas de bresenham
  * @param {number} x0 - coordenadas x inicial
  * @param {number} y0 - coodernadas y inicial
  * @param {number} x1 - coordenadas x final
@@ -69,31 +96,5 @@ function bresenham (x0 , y0, x1, y1, plot){
             err+=dx;
             y0+=sy;
         }
-    }
-}
-/**
- * dibuja las marcasde escala numerica en los bordesdel canvas
- * tambien se muestra el eje y el eje y
- * @param {CanvasRenderingContext2D} ctx - contexto del canvas 
- * @param {number} escala - tamaño en pixeles en cada unidad donde esto tiene que coincidir con el plot
- * @param {number} ancho - ancho total del canvas en px
- * @param {number} alto - alto total del canvas en px
-*/
-
-function dibujarEscala(ctx, escala, ancho, alto){
-    ctx.fillStyle="black";
-    ctx.font="10px Arial";
-
-    //aqui se calculan cuantas marcas entran en cada eje 
-    let marcasX = Math.floor(ancho/escala);
-    let marcasY = Math.floor(alto/escala);
-
-    //se dibujan los numeros en el eje x
-    for (let i=0;i<=marcasX;i++){
-         ctx.fillText(i, i*escala, alto-5);
-    }
-    //se dibujan los numeros en el eje y
-    for (let j=0; j<=marcasY; j++){
-        ctx.fillText(j, 2, j*escala+10);
     }
 }
