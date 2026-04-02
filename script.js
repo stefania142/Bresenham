@@ -82,11 +82,26 @@ function bresenham (x0 , y0, x1, y1, plot){
     let sy = (y0<y1)?1:-1;
     let err = dx-dy;
 
+    //arreglo para guardar los pasos
+    let pasos = [];
+
     while(true){
         plot(x0,y0);
-        if(x0===x1 && y0===y1) 
+
+        //calcula el e2 para guardarlo en la tabla
+        let e2=2*err;
+
+        //se guarda el estado actual como un objeto
+        pasos.push({
+            x: x0, y: y0,
+            dx: dx, dy: dy,
+            sx: sx, sy: sy,
+            err: err, e2: e2
+
+        })
+
+        if(x0 === x1 && y0 === y1) 
             break;
-        let e2 = 2 *err;
 
         if(e2>-dy){
             err-=dy;
@@ -97,4 +112,47 @@ function bresenham (x0 , y0, x1, y1, plot){
             y0+=sy;
         }
     }
+    //aqui llamamos a generarTabla con los pasos ya recolectados
+    generarTabla(pasos);
+}
+/**
+ * geeneramos una tabla con los valores de cada paso del algotitmo
+ * mostramos x, y, dx, dy, sx, sy, err y e2 en cada interaccion
+ * @param {array} pasos - este funciona como el arreglo de los objetos con los valores de cada paso
+ */
+function generarTabla(pasos){
+    //se obtiene el contenedor de la tabla 
+    let contenedor = document.getElementById("contenedorTabla");
+
+    //construimos la tabla 
+    let html = "<table border='1'>";
+    html += "<tr>";
+    html += "<th>Paso</th>";
+    html += "<th>x</th>";
+    html += "<th>y</th>";
+    html += "<th>dx</th>";
+    html += "<th>dy</th>";
+    html += "<th>sx</th>";
+    html += "<th>sy</th>";
+    html += "<th>err</th>";
+    html += "<th>e2</th>";
+    html += "</th>";
+
+    //agregamos una fila por cada paso
+    for (let i=0; i<pasos.length; i++){
+        let p=pasos[i];
+        html += "<tr>";
+        html += "<td>" + (i+1)+"</td>";
+        html += "<td>" + p.x + "</td>";
+        html += "<td>" + p.y + "</td>";
+        html += "<td>" + p.dx + "</td>";
+        html += "<td>" + p.dy + "</td>";
+        html += "<td>" + p.sx + "</td>";
+        html += "<td>" + p.sy + "</td>";
+        html += "<td>" + p.err + "</td>";
+        html += "<td>" + p.e2 + "</td>";
+        html += "</tr>";
+    }
+    html += "</table>";
+    contenedor.innerHTML = html;
 }
